@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "130115367310",
+    "project_id": "eldlo-363420",
+    "storage_bucket": "eldlo-363420.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130115367310:android:d077c3f6f21a2fde3674df",
+        "android_client_info": {
+          "package_name": "com.sapin.themovies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "130115367310-v71mve6rnpnn7v2kvaebr6gnbojp4gc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb42g1jIglZeDbDASEpttgTTOLmnsCX7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "130115367310-v71mve6rnpnn7v2kvaebr6gnbojp4gc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
