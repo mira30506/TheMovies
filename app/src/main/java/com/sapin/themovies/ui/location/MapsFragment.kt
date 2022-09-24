@@ -17,12 +17,8 @@ import com.sapin.themovies.R
 
 class MapsFragment : Fragment() {
     private lateinit var map:GoogleMap
-    private val callback = OnMapReadyCallback { googleMap ->
-        map=googleMap
-        val sydney = LatLng(20.6099033, -103.26848)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney,18f),4000,null)
-    }
+     private var latitude:Double = 0.0
+    private  var longitude:Double = 0.0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,11 +30,16 @@ class MapsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        longitude= requireArguments().getDouble(LONGITUDE)
+        latitude= requireArguments().getDouble(LATITUDE)
         mapFragment?.getMapAsync(callback)
     }
 
-    companion object{
-
+    private val callback = OnMapReadyCallback { googleMap ->
+        map=googleMap
+        val sydney = LatLng(latitude, longitude)
+        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney,18f),4000,null)
     }
 
 }

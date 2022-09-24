@@ -1,6 +1,9 @@
 package com.sapin.themovies.ui.main
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -14,9 +17,12 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -44,25 +50,20 @@ class MainActivity : AppCompatActivity(){
     companion object{
         const val REQUEST_CODE=0
     }
+    private val CHANNEL_ID="CHANEL"
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
-    val UPDATE_INTERVALS_IN_MILISECONDS=1000
-    val FASTEST_UPDATE_INTERVAL=1000
     lateinit var mSettingsClient:SettingsClient
     lateinit var locationRequest:LocationRequest
     lateinit var locationSettingsRequest:LocationSettingsRequest
     lateinit var locationCallback:LocationCallback
     lateinit var location :Location
     var mRequestingLocationUpdates=false
-
-
     lateinit  var viewModel: MainViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        createNotificationChannel()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
@@ -83,12 +84,13 @@ class MainActivity : AppCompatActivity(){
                    var date=Date()
                     var l= LocationModel(latitude,longitud,date.toString())
                     viewModel.saveLocation(l)
+                setNotificate()
                 }
         }
 
         locationRequest= LocationRequest.create()
-            .setInterval(30000)
-            .setFastestInterval(30000)
+            .setInterval(300000)
+            .setFastestInterval(300000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
 
         locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
@@ -116,8 +118,8 @@ class MainActivity : AppCompatActivity(){
                 .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        val navView = binding.navView
+       val  navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -155,7 +157,6 @@ class MainActivity : AppCompatActivity(){
                 //map.isMyLocationEnabled=true
                 else
                     Toast.makeText(baseContext,"para activar la localizacion ve ajustes y acepta los permisos",Toast.LENGTH_SHORT).show()
-
         }
 
     }
@@ -192,5 +193,36 @@ class MainActivity : AppCompatActivity(){
         if(mRequestingLocationUpdates)
             stopRemoveLocationUpdates()
     }
+
+
+
+    fun setNotificate(){
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("Ubicacion guardada")
+            .setContentText("se ha guardado la ubicacion en firebase")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(1, builder.build())
+        }
+    }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+
+
 
 }

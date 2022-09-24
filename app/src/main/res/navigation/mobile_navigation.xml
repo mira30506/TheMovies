@@ -10,12 +10,28 @@
         android:id="@+id/nav_Movies"
         android:name="com.sapin.themovies.ui.movie.MoviesListFragment"
         android:label="@string/menu_movies"
-        tools:layout="@layout/fragment_movies_list" />
+        tools:layout="@layout/fragment_movies_list" >
+    </fragment>
     <fragment
         android:id="@+id/nav_Location"
         android:name="com.sapin.themovies.ui.location.LocationFragment"
         android:label="@string/menu_locatio"
-        tools:layout="@layout/fragment_location" />
+        tools:layout="@layout/fragment_location" >
+        <action
+            android:id="@+id/action_nav_Location_to_nav_mapLocation"
+            app:destination="@id/nav_mapLocation" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_mapLocation"
+        android:name="com.sapin.themovies.ui.location.MapsFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_nav_mapLocation_to_nav_Location"
+            app:destination="@id/nav_Location" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_home"
