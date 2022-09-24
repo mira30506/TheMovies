@@ -20,7 +20,6 @@ class MovieMemoryDS @Inject constructor(private val movieDao: MovieDao) {
             }
             else
                 observer.onChanged(movies)
-
         }
     }
     fun insertMovies(movies: List<Movie>){
