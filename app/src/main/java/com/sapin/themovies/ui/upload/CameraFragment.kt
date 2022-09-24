@@ -92,8 +92,6 @@ class CameraFragment : Fragment() {
         }
         // Set up the listeners for take photo and video capture buttons
         viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-        viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
-
         cameraExecutor = Executors.newSingleThreadExecutor()
         startCamera()
     }
@@ -132,9 +130,6 @@ class CameraFragment : Fragment() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults){
                     val msg = "Photo capture succeeded: ${output.savedUri}"
-                    val file= File(output.savedUri.toString()+".jpg")
-                    val er=file.absolutePath
-                    val name=file.name
                     Toast.makeText(activity?.baseContext, msg, Toast.LENGTH_SHORT).show()
                     viewModel.uploadPhoto(output.savedUri!!)
                     Log.d(TAG, msg)
@@ -142,10 +137,6 @@ class CameraFragment : Fragment() {
             }
         )
     }
-
-
-
-    private fun captureVideo() {}
 
 
     companion object {

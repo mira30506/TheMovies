@@ -81,53 +81,17 @@ class MainActivity : AppCompatActivity(){
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
-        //requestPermision()
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.error.observe(this){
+            Toast.makeText(baseContext,""+it,Toast.LENGTH_SHORT).show()
+        }
+        viewModel.result.observe(this){
+            Toast.makeText(baseContext,""+it,Toast.LENGTH_SHORT).show()
+        }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mSettingsClient = LocationServices.getSettingsClient(this)
-
-        locationCallback= object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult?) {
-                    super.onLocationResult(p0)
-                    location=p0!!.lastLocation
-                    //aqui estan mis datos
-                    var latitude=location.latitude
-                    var longitud=location.longitude
-                    Log.d("LOCATION","latitude:"+location.latitude)
-                    Log.d("LOCATION","longitud:"+longitud)
-                   var date=Date()
-                    var l= LocationModel(latitude,longitud,date.toString())
-                    viewModel.saveLocation(l)
-                setNotificate()
-                }
-        }
-
-        locationRequest= LocationRequest.create()
-            .setInterval(300000)
-            .setFastestInterval(300000)
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-
-        locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
-        Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-            .withListener(object : PermissionListener{
-                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    startLocationUpdates()
-                    mRequestingLocationUpdates=true
-                }
-                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    if(response!!.isPermanentlyDenied){
-                        opensettings()
-                    }
-                }
-                override fun onPermissionRationaleShouldBeShown(
-                    permission: PermissionRequest?,
-                    token: PermissionToken?
-                ) {
-                    token!!.continuePermissionRequest()
-                }
-            }).check()
-
-
+        setLocation()
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView = binding.navView
        val  navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -148,6 +112,7 @@ class MainActivity : AppCompatActivity(){
         ///permisos de camera
         // Request camera permissions
         if (allPermissionsGranted()) {
+            Toast.makeText(baseContext,"granted",Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
@@ -179,7 +144,7 @@ class MainActivity : AppCompatActivity(){
         }
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-                Toast.makeText(baseContext,"Permisos obtorgaodo",Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext,"Permisos obtorgados",Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this,
                     "Permissions not granted by the user.",
@@ -250,12 +215,54 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-
-
-
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+
+    fun setLocation(){
+        locationCallback= object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult?) {
+                super.onLocationResult(p0)
+                location=p0!!.lastLocation
+                //aqui estan mis datos
+                var latitude=location.latitude
+                var longitud=location.longitude
+                Log.d("LOCATION","latitude:"+location.latitude)
+                Log.d("LOCATION","longitud:"+longitud)
+                var date=Date()
+                var l= LocationModel(latitude,longitud,date.toString())
+                viewModel.saveLocation(l)
+                setNotificate()
+            }
+        }
+
+        locationRequest= LocationRequest.create()
+            .setInterval(300000)
+            .setFastestInterval(300000)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+        locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(locationRequest).build()
+        Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            .withListener(object : PermissionListener{
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    startLocationUpdates()
+                    mRequestingLocationUpdates=true
+                }
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    if(response!!.isPermanentlyDenied){
+                        opensettings()
+                    }
+                }
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    token!!.continuePermissionRequest()
+                }
+            }).check()
+
     }
 
 }

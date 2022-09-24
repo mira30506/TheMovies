@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -77,7 +78,9 @@ class UploadFragment : Fragment() {
         }
         btnCamera.setOnClickListener { navController.navigate(R.id.nav_camera) }
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.errorUpload.observe(viewLifecycleOwner){
+            Toast.makeText(activity?.baseContext,""+it,Toast.LENGTH_SHORT).show()
+        }
     }
 
     var someActivityResultLauncher = registerForActivityResult<Intent, ActivityResult>(
@@ -85,8 +88,13 @@ class UploadFragment : Fragment() {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
-            for(i:Int in 0..data!!.clipData!!.itemCount-1)
-                viewModel.uploadPhoto(data.clipData!!.getItemAt(i).uri)
+            if (data!=null){
+            if(data!!.clipData==null)
+                viewModel.uploadPhoto(data.data!!)
+            else
+                for(i:Int in 0..data!!.clipData!!.itemCount-1)
+                    viewModel.uploadPhoto(data.clipData!!.getItemAt(i).uri)
+            }
         }
     }
 
