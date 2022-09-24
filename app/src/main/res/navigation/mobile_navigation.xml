@@ -3,9 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_Movies">
 
 
+    <fragment
+        android:id="@+id/nav_upload"
+        android:name="com.sapin.themovies.ui.upload.UploadFragment"
+        android:label="@string/menu_uploadFragment"
+        tools:layout="@layout/fragment_upload" >
+        <action
+            android:id="@+id/action_nav_upload_to_nav_camera"
+            app:destination="@id/nav_camera" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_camera"
+        android:name="com.sapin.themovies.ui.upload.CameraFragment"
+        android:label="@string/menu_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_nav_camera_to_nav_upload"
+            app:destination="@id/nav_upload" />
+    </fragment>
     <fragment
         android:id="@+id/nav_Movies"
         android:name="com.sapin.themovies.ui.movie.MoviesListFragment"
@@ -33,21 +51,4 @@
             app:destination="@id/nav_Location" />
     </fragment>
 
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.sapin.themovies.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.sapin.themovies.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.sapin.themovies.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 </navigation>

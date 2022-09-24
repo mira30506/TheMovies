@@ -1,7 +1,8 @@
-package com.sapin.themovies.sys
+package com.sapin.themovies.sys.di
 
 import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.sapin.themovies.data.web.api.MovieApiService
@@ -61,4 +62,9 @@ object NetWorkModule {
         return FirebaseFirestore.getInstance()
     }
 
+    @Singleton
+    @Provides
+    fun providesFireStorage():FirebaseStorage{
+        return FirebaseStorage.getInstance()
+    }
 }

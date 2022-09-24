@@ -17,8 +17,10 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -49,6 +51,18 @@ import java.util.*
 class MainActivity : AppCompatActivity(){
     companion object{
         const val REQUEST_CODE=0
+        private const val TAG = "CameraXApp"
+        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS =
+            mutableListOf (
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            ).apply {
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+            }.toTypedArray()
     }
     private val CHANNEL_ID="CHANEL"
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -113,10 +127,7 @@ class MainActivity : AppCompatActivity(){
                 }
             }).check()
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView = binding.navView
        val  navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -124,15 +135,23 @@ class MainActivity : AppCompatActivity(){
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home,
-                R.id.nav_gallery,
-                R.id.nav_slideshow,
                 R.id.nav_Movies,
-                R.id.nav_Location
+                R.id.nav_Location,
+                R.id.nav_upload
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+
+        ///permisos de camera
+        // Request camera permissions
+        if (allPermissionsGranted()) {
+        } else {
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -158,7 +177,16 @@ class MainActivity : AppCompatActivity(){
                 else
                     Toast.makeText(baseContext,"para activar la localizacion ve ajustes y acepta los permisos",Toast.LENGTH_SHORT).show()
         }
-
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
+                Toast.makeText(baseContext,"Permisos obtorgaodo",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this,
+                    "Permissions not granted by the user.",
+                    Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
     }
 
 
@@ -224,5 +252,10 @@ class MainActivity : AppCompatActivity(){
 
 
 
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
 
 }

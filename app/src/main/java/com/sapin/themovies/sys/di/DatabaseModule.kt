@@ -1,4 +1,4 @@
-package com.sapin.themovies.sys
+package com.sapin.themovies.sys.di
 
 import android.content.Context
 import androidx.room.Room

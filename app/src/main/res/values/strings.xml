@@ -17,5 +17,10 @@
     <string name="menu_map">Map</string>
     <string name="channel_name">chanel</string>
     <string name="channel_description">canal de notificacion</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="start_capture">Start Capture</string>
+    <string name="stop_capture">Stop Capture</string>
+    <string name="menu_uploadFragment">Upload</string>
+    <string name="menu_camera">Camera</string>
 
 </resources>
