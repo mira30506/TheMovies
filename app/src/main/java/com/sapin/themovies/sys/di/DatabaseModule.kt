@@ -24,7 +24,6 @@ object DatabaseModule {
         ).build()
     }
 
-
     @Singleton
     @Provides
     fun providesMovieDao(appDatabase: AppDatabase):MovieDao{

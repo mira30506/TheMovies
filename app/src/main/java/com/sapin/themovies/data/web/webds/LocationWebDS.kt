@@ -10,6 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class LocationWebDS @Inject constructor(private val apiFirebase: ApiFirebase) {
+
     fun sendLocation(locationModel: LocationModel, observer: Observer<String>,error:Observer<String>)=( apiFirebase.sendLocation(locationModel,observer,error))
 
     fun readLocations(observer: Observer<QuerySnapshot>,error: Observer<String>)=( apiFirebase.readLocations(observer,error))

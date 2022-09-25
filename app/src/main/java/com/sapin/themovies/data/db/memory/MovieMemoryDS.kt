@@ -12,19 +12,15 @@ import javax.inject.Singleton
 @Singleton
 class MovieMemoryDS @Inject constructor(private val movieDao: MovieDao) {
 
-    fun getMovies(observer: Observer<Any>){
-        CoroutineScope(Dispatchers.IO).launch {
-            val movies=movieDao.getMovies()
-            if(movies.isEmpty()) {
-                observer.onChanged("Connectese a internet")
-            }
-            else
-                observer.onChanged(movies)
-        }
-    }
+    fun getMovies()= movieDao.getMovies()
+
+
+
+
     fun insertMovies(movies: List<Movie>){
         CoroutineScope(Dispatchers.IO).launch {
-                movieDao.insert(movies)
+            movieDao.allData()
+            movieDao.insert(movies)
         }
     }
 }
