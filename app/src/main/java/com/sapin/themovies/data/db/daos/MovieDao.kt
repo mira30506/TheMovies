@@ -10,12 +10,12 @@ import org.intellij.lang.annotations.JdkConstants
 interface MovieDao {
 
     @Query("Select * from Movie")
-    fun getMovies():List<Movie>
+    suspend   fun getMovies():List<Movie>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(lista:List<Movie>)
+   suspend fun insert(lista:List<Movie>)
 
 
     @Query("delete from  Movie")
-    fun allData()
+   suspend fun allData()
 }
